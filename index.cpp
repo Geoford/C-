@@ -40,6 +40,8 @@ void add();
 void update();
 void erase();
 void seat();
+void save_billing(const string& customerName, const string& contactInfo, const string& movieName, const string& showtime, int ticketCount, double totalPrice);
+void bill_history();
 
 //regex zone
 bool validate_time_format(const string& time) {
@@ -85,7 +87,8 @@ int main() {
         cout << "[4] Update Movie" << endl;
         cout << "[5] Delete Movie" << endl;
         cout << "[6] View Seatings" << endl;
-        cout << "[7] Exit \n\n" << endl;
+        cout << "[7] Bill History" << endl;
+        cout << "[8] Exit \n\n" << endl;
         cout << "Enter Your Choice: "; 
         choice = _getch(); // Read a character from the keyboard without waiting for Enter
         if (choice == '1') {
@@ -101,6 +104,8 @@ int main() {
         } else if (choice == '6') {
             seat();
         } else if (choice == '7') {
+            bill_history();
+        } else if (choice == '8') {
             exit(0);
         } else {
             system("cls");
@@ -204,9 +209,80 @@ void load_movies() {
 }
 
 
-void book(){
+// Function to book a reservation
+void book() {
+    string customerName, contactInfo;
+    use = true;
+    view();			//view() displays available movies
+    use = false;
+    // Prompt for customer information
+    cout << "\nEnter Customer Name: ";
+    getline(cin, customerName);
+    cout << "Enter Customer Contact (email or phone number): ";
+    getline(cin, contactInfo);
+    int id;
+    cout << "\nEnter Movie ID to book: ";
+    cin >> id;
+    if (id < 1 || id > movie_count) {
+        cout << "Invalid Movie ID!" << endl;
+        return;
+    }
+    Movie selected_movie = movies[id - 1];
+    cout << "Premiere Times for " << selected_movie.name << ":" << endl;
+    for (int i = 0; i < selected_movie.premiere_count; i++) {
+        cout << i + 1 << ". " << selected_movie.showtime[i] << endl;
+    }
+    int timechoice;
+    cout << "Enter the number of the premiere time to book: ";
+    cin >> timechoice;
+    if (timechoice < 1 || timechoice > selected_movie.premiere_count) {
+        cout << "Invalid premiere time selection!" << endl;
+        return;
+    }
+
+    int ticketCount;
+    cout << "Enter the number of tickets to buy: ";
+    cin >> ticketCount;
+
+    if (ticketCount < 1) {
+        cout << "Invalid number of tickets!" << endl;
+        return;
+    }
+
+    double totalPrice = ticketCount * selected_movie.price;
+
+    // Confirm booking
+    cout << "\nYou have successfully booked " << ticketCount << " tickets for " << selected_movie.name
+         << " at " << selected_movie.showtime[timechoice - 1] << endl;
+    cout << "Total Price: Php" << fixed << setprecision(2) << totalPrice << endl;
+
+    // Save billing information
+    save_billing(customerName, contactInfo, selected_movie.name, selected_movie.showtime[timechoice - 1], ticketCount, totalPrice);
+    
+    cout << "\n\nPress Any Key to Continue:";
+    _getch();
     system("cls");
-    cout<<"1"<<endl;
+}
+
+// Function to save billing information to a file
+void save_billing(const string& customerName, const string& contactInfo, const string& movieName, const string& showtime, int ticketCount, double totalPrice) {
+    ofstream billingsFile("billings.txt", ios_base::app); // Append mode
+
+    if (!billingsFile.is_open()) {
+        cerr << "Error: Could not open billings file for writing." << endl;
+        return;
+    }
+
+    // Write customer and booking details to file
+    billingsFile << "Customer Name: " << customerName << endl;
+    billingsFile << "Contact Info: " << contactInfo << endl;
+    billingsFile << "Movie Name: " << movieName << endl;
+    billingsFile << "Showtime: " << showtime << endl;
+    billingsFile << "Number of Tickets: " << ticketCount << endl;
+    billingsFile << "Total Price: Php " << fixed << setprecision(2) << totalPrice << endl << endl;
+
+    cout << "Billing information saved successfully.\n";
+    billingsFile.close();
 }
 
 void view() {
@@ -529,6 +605,31 @@ void erase() {
 }
 
 void seat(){
+	system("cls");
+	cout<<"6"<<endl;
+}
+
+void bill_history() {
     system("cls");
-    cout<<"6"<<endl;
+    title();
+	
+    ifstream billingsFile("billings.txt");
+
+    if (!billingsFile.is_open()) {
+        cerr << "Error: Could not open billings file." << endl;
+        return;
+    }
+
+    cout << "\n\nBill History:\n" << string(80, '=') << "\n\n";
+
+    string line;
+    while (getline(billingsFile, line)) {
+        cout << line << endl;
+    }
+
+    billingsFile.close();
+
+    cout << "\n\nPress Any Key to Continue:";
+    _getch();
+    system("cls");
 }
