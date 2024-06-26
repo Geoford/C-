@@ -1,0 +1,11 @@
+qwe|123|Cinema 1 Movie 1|1:00 PM|3|3702|Booked|
+jm|09877654|Cinema 1 Movie 3|7:00 AM|3|1368|Booked|
+jm|076755|Cinema 1 Movie 3|7:00 AM|3|1368|Booked|
+jm|09776|Cinema 1 Movie 3|7:00 AM|2|912|Pending|
+jm|09876543|Cinema 1 Movie 3|7:00 AM|3|1368|Booked|
+jm|0987654|Cinema 1 Movie 3|7:00 AM|3|1368|Pending|
+jm|0987654|Cinema 1 Movie 3|8:00 AM|3|1368|Pending|
+jm|0987654|Cinema 1 Movie 3|6:00 AM|2|912|Pending|
+jm|0987654|Cinema 1 Movie 3|7:00 AM|3|1368|Pending|
+jm|098765|Cinema 1 Movie 3|7:00 AM|3|1368|Pending|
+jm|098765|Cinema 1 Movie 3|8:00 AM|2|912|Pending|
